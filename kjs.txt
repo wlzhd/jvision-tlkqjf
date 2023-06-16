@@ -1,21 +1,8 @@
-학원 연결 : ssh 192.168.0.45
-집 연결 : ssh jeonjucom.kr 22045
-
-0) 기본설치
-sudo apt update
-sudo apt upgrade
-sudo apt -y install wget
-sudo apt -y install nano
-sudo apt -y install lrzsz (이게 있어야 드래그 다운 가능)
-sudo apt -y install net-tools
-sudo apt -y install unzip
-sudo ufw disable (방화벽 다운)
-
 1) 우분투에 자바및 tomcat 설치
 https://www.oracle.com/java/technologies/downloads/#java11
 tar zxvf jdk-11.0.19_linux-x64_bin.tar.gz (압축해제 명령어)
 sudo mkdir /usr/java
-sudo mv jdk-11.0.19 /usr/java/jdk11 (jdk-11.0.19 파일을 java 파일에 움긴다 무슨이름으로 jdk11으로 이름으로)
+sudo mv jdk-11.0.19 /usr/java/jdk11 (jdk-11.0.19 (파일을 java 파일에 움긴다 무슨이름으로 jdk11으로 이름으로)
 sudo nano /etc/profile
 아래 4줄 추가-----------------------------------------------------------------------------------------
 # add follows to the end
@@ -26,16 +13,19 @@ export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar
 source /etc/profile
 java -version (버전확인)
 --------------------------------------------------------------------------------------------------------
-
 2) 아파치&tomcat 다운로드
 sudo apt-get -y install apache2 (아파치 다운)
-netstat -ant | grep 80 (연결이 됬나 확인)
+netstat -ant | grep 80 (80관련된 포트 연결이 됬나 확인)
 sudo systemctl start apache2
 
 인터넷 확인
 
-wget http://ftp.riken.jp/net/apache/tomcat/tomcat-9/v9.0.75/bin/apache-tomcat-9.0.75.tar.gz
+wget http://ftp.riken.jp/net <- 클라우드 사용
+wget http://ftp.riken.jp/net/apache/tomcat/tomcat-9/v9.0.75/bin/apache-tomcat-9.0.75.tar.gz <-Xshell7 사용
 ↑(자바환경을 돌아가게 해주는 웹서버) <- 이게 없으면 jsp사용 불가능
+
+apache -> tomcat -> tomcat-9 -> apache-tomcat-9.0.76.tar.gz( 변동 있으면 니들 ㅈ대로 해라)
+
 sudo tar zxvf apache-tomcat-9.0.75.tar.gz
 sudo mv apache-tomcat-9.0.75 /usr/tomcat9
 sudo useradd -M -d /usr/tomcat9 tomcat9
@@ -43,20 +33,21 @@ sudo chown -R tomcat9. /usr/tomcat9
 
 sudo passwd root (root권한 비밀번호 설정)
 su (root권한 부여)
-cd /usr/tomcat9/bin
+cd /usr/tomcat9/bin (이안에 tomcat를 실행시키는 뭔가가 있다 뭔지는 나도 몰라 시발)
 
 ./startup.sh
 
+웹 2개 띄우고
 http://192.168.0.45 (아파치 확인)
 http://192.168.0.45:8080 (고양이 확인)
 
-./version.sh (안씀)
-./shutdown.sh (안씀)
-
+./version.sh <- ./shutdown.sh&./startup.sh 사용 안되면 사용하자
+./shutdown.sh
+--------------------------------------------------------------------------------------------------------
 3) 아파치와 tomcat 연동
 --------------------------------------------------------------------------------------------------------
 먼저 확인
-cd /etc/apache2/mods-available
+cd /etc/apache2/mods-available (이동)
 ls -al | grep jk.conf (연결해주는 역할)
 ls -al | grep jk.load (연결해주는 역할)
 --------------------------------------------------------------------------------------------------------
@@ -65,33 +56,53 @@ sudo apt-get install libapache2-mod-jk (아파치와 tomcat 연동해주는 친�
 ls -al | grep jk.conf 파일 확인
 ls -al | grep jk.load 파일 확인
 
------------------------------------------------------------------------------------------
-sudo nano /etc/libapache2-mod-jk/workers.properties
+cd /etc/libapache2-mod-jk (이동)
+workers.properties (이거 있나 확인)
+--------------------------------------------------------------------------------------------------------
+sudo nano /etc/libapache2-mod-jk/workers.properties 
 workers.tomcat_home=/usr/tomcat9
 workers.java_home=/usr/java/jdk11
 --------------------------------------------------------------------------------------------------------
-
 cd /usr/tomcat9/conf
 
 nano server.xml
-Connector port="8009"
-address="0.0.0.0"
+"ctrl + w = 찾기 기능 = 8009 검색"
+
 protocol="AJP/1.3"
+addres="0.0.0.0"
+port="8009"
 redirectPort="8443"
 URIEncoding="UTF-8"
 useBodyEncodingForURI="true"
 secretRequired="false"
-Engine name="Catalina" defaultHost="localhost" jvmRoute="ajp13_worker">
+maxParameterCount="1000"
 
-nano /etc/apache2/sites-enabled/000-default.conf
-VirtualHost *:80>
+<Engine name="Catalina" defaultHost="localhost" jvmRoute="ajp13_worker">
+
+호스트 확인 appBase = "webapps" (설정)
+
+cd /usr/tomcat9/bin
+./shutdown.sh
+./startup.sh
+--------------------------------------------------------------------------------------------------------
+FTP 다운로드
+usr/tomcat9/webapps/ROOT <- 에서 사용
+apt -y install vsftpd
+
+nano /etc/apache2/sites-enabled/000-default.conf <- master 에서 사용
+
 ServerName localhost
 JkMount /* ajp13_worker
 DocumentRoot /home/master/ROOT
-/VirtualHost>
 
 /usr/tomcat9/bin/shutdown.sh
 /usr/tomcat9/bin/startup.sh
+
 systemctl restart apache2
-http://192.168.219.106:8080 (고양이확인)
-http://192.168.219.106(고양이확인)
+http://192.168.0.45:8080 (고양이확인)
+http://192.168.0.45(고양이확인)
+--------------------------------------------------------------------------------------------------------
+2023/06/09 부터 학원에서 이렇게 한다
+:8045 막서버
+ssh jslweb.izerone.co.kr <- 연습용 아님 (학원에서 사용)
+stu15.jslweb.co.kr <- ???
