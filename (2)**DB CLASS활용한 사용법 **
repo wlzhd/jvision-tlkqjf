@@ -28,18 +28,27 @@ public class MemberSrc {
 					+ "'"+mvo.getEmail()+"')";
 			result = stmt.executeUpdate(query);
 			System.out.println("query >> " + query);
-			}catch(SQLException e) {
+			} // END OF TRY
+			catch(SQLException e) {
 				System.out.println("DB오류 : " + e);
-			}
+			} // END OF CATCH
 			return result;
 	}
 
 	public static void main (String args[]) {
-		// Connection conn = DBConnection.getConnection();
-		// System.out.println("conn >> " + conn);
-		
+
 		Scanner scan = new Scanner(System.in); 
+		int flag = 0;
 		
+		while(flag!=4) {
+		
+		System.out.println("======================회원관리======================");
+		System.out.println("1. 회원가입   2.회원출력\n"
+				+ "3. 회원삭제   4. 종료");
+		flag = scan.nextInt(); // 사용자 입력 뭐할건지
+		
+		if(flag == 1) { // 사용자가 1눌렀을때
+			
 		String name = "";
 		String id = "";
 		String pass = "";
@@ -49,29 +58,29 @@ public class MemberSrc {
 		String gender = "";
 		String email = "";
 		
-				System.out.println("회원정보 입력 ↓");
-				System.out.println("이름입력 : ");
-				name=scan.next();
-				System.out.println("아이디 입력 : ");
-				id=scan.next();
-				System.out.println("비밀번호 입력 : ");
-				pass=scan.next();
-				System.out.println("전화번호 입력 : ");
-				phone=scan.next();
-				System.out.println("생년월일 입력 : ");
-				birth=scan.next();
-				System.out.println("주소 입력 : ");
-				addr=scan.next();
-				System.out.println("성별 입력 : ");
-				gender=scan.next();
-				System.out.println("이메일 입력 : ");
-				email=scan.next();
-				
-				MemberVO mvo = new MemberVO(name, id, pass, phone, birth, addr, gender, email);
-				int result = MemberSrc.insertMember(mvo);
-				System.out.println("result >> " + result);
+		System.out.println("회원정보 입력 ↓");
+		System.out.println("이름입력 : ");
+		System.out.println("아이디 입력 : ");
+		id=scan.next();
+		System.out.println("비밀번호 입력 : ");
+		pass=scan.next();
+		System.out.println("전화번호 입력 : ");
+		phone=scan.next();
+		System.out.println("생년월일 입력 : ");
+		birth=scan.next();
+		System.out.println("주소 입력 : ");
+		addr=scan.next();
+		System.out.println("성별 입력 : ");
+		gender=scan.next();
+		System.out.println("이메일 입력 : ");
+		email=scan.next();
+		
+		MemberVO mvo = new MemberVO(name, id, pass, phone, birth, addr, gender, email);
+		int result = MemberSrc.insertMember(mvo);
+		System.out.println("result >> " + result);
+		} // END OF IF
+		
+	} // END OF WHILE
 				
 	} // END OF MAIN
 } // END OF CLASS(MemberSrc)
-
-// 원시적인 방법인데 일단 이걸로 배워서 이걸로 사용하삼 시발 진짜 존나 ㅈ같네 이게 뭐야 진짜
