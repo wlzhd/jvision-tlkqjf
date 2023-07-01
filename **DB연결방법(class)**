@@ -16,7 +16,7 @@ public class DBConnection {
 		// DB 접속 객체 초기화
 		// 1. 라이브러리 Driver.class 파일 존재 여부 확인!!
 		// 2. DB접속
-		Connection conn = null;
+		Connection conn = null; // 초기화
 		try{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(URL,USER,PASS);
