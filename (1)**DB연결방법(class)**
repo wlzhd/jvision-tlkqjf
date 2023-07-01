@@ -27,9 +27,13 @@ public class DBConnection {
 		}
 		return conn;
 	}
-
---------------------------------------------------------------
-
+	
+	
+	
+	
+	
+	
+	
 /*	public static void main(String args[]) {
 		// 예외처리
 		try {
