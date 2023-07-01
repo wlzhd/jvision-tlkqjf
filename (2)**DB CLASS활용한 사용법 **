@@ -34,6 +34,24 @@ public class MemberSrc {
 			} // END OF CATCH
 			return result;
 	}
+	
+	public static int deleteMember(String name) {
+		//1. DB연결 접속 정보
+			Connection conn = DBConnection.getConnection();
+			int result = 0;
+			try {
+				//2. DB연결 통로
+				Statement stmt = conn.createStatement();
+				//3. 쿼리문 작성
+				String query = "delete from membertable where name ='"+name+"'";
+					System.out.println("query >> " + query);
+					result = stmt.executeUpdate(query);
+					} // END OF TRY
+					catch(SQLException e) {
+						System.out.println("DB오류 : " + e);
+					} // END OF CATCH
+					return result;
+			}
 
 	public static void main (String args[]) {
 
@@ -59,7 +77,7 @@ public class MemberSrc {
 		String email = "";
 		
 		System.out.println("회원정보 입력 ↓");
-		System.out.println("이름입력 : ");
+		System.out.println("이름 입력 : ");
 		System.out.println("아이디 입력 : ");
 		id=scan.next();
 		System.out.println("비밀번호 입력 : ");
@@ -77,9 +95,29 @@ public class MemberSrc {
 		
 		MemberVO mvo = new MemberVO(name, id, pass, phone, birth, addr, gender, email);
 		int result = MemberSrc.insertMember(mvo);
-		System.out.println("result >> " + result);
-		} // END OF IF
 		
+		if(result == 1) {
+			System.out.println("회원가입이 완료되었습니다");
+		} else {
+			System.out.println("오류가 발생했습니다");
+		} // END OF IF
+		} else if (flag == 3) {
+			System.out.println("회원삭제");
+			System.out.println("삭제할 회원의 이름을 입력하세요");
+			String name = scan.next();
+			
+			int result = MemberSrc.deleteMember(name);
+			
+			if(result == 1) {
+				System.out.println("삭제가 완료되었습니다");
+			} else {
+				System.out.println("오류발생");
+			}
+			
+			
+			
+		} // END OF IF
+
 	} // END OF WHILE
 				
 	} // END OF MAIN
