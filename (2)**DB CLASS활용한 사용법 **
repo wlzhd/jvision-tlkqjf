@@ -1,0 +1,77 @@
+package member;
+
+import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class MemberSrc {
+	//INSERT
+	public static int insertMember(MemberVO mvo) {
+		// DB 연결 후 객체에 저장된 데이터 DB에 추가
+		Connection conn = DBConnection.getConnection();
+		System.out.println("conn >> " + conn);
+		
+		int result = 0;
+		try {
+		// DB 연결 통로
+		Statement stmt = conn.createStatement();
+		// 쿼리문 작성
+		String query = "INSERT INTO MEMBERTABLE VALUES("
+					+ "'"+mvo.getName()+"',"
+					+ "'"+mvo.getId()+"',"
+					+ "'"+mvo.getPass()+"',"
+					+ "'"+mvo.getPhone()+"',"
+					+ "'"+mvo.getBirth()+"',"
+					+ "'"+mvo.getAddr()+"',"
+					+ "'"+mvo.getGender()+"',"
+					+ "'"+mvo.getEmail()+"')";
+			result = stmt.executeUpdate(query);
+			System.out.println("query >> " + query);
+			}catch(SQLException e) {
+				System.out.println("DB오류 : " + e);
+			}
+			return result;
+	}
+
+	public static void main (String args[]) {
+		// Connection conn = DBConnection.getConnection();
+		// System.out.println("conn >> " + conn);
+		
+		Scanner scan = new Scanner(System.in); 
+		
+		String name = "";
+		String id = "";
+		String pass = "";
+		String phone = "";
+		String birth = "";
+		String addr = "";
+		String gender = "";
+		String email = "";
+		
+				System.out.println("회원정보 입력 ↓");
+				System.out.println("이름입력 : ");
+				name=scan.next();
+				System.out.println("아이디 입력 : ");
+				id=scan.next();
+				System.out.println("비밀번호 입력 : ");
+				pass=scan.next();
+				System.out.println("전화번호 입력 : ");
+				phone=scan.next();
+				System.out.println("생년월일 입력 : ");
+				birth=scan.next();
+				System.out.println("주소 입력 : ");
+				addr=scan.next();
+				System.out.println("성별 입력 : ");
+				gender=scan.next();
+				System.out.println("이메일 입력 : ");
+				email=scan.next();
+				
+				MemberVO mvo = new MemberVO(name, id, pass, phone, birth, addr, gender, email);
+				int result = MemberSrc.insertMember(mvo);
+				System.out.println("result >> " + result);
+				
+	} // END OF MAIN
+} // END OF CLASS(MemberSrc)
+
+// 원시적인 방법인데 일단 이걸로 배워서 이걸로 사용하삼 시발 진짜 존나 ㅈ같네 이게 뭐야 진짜
