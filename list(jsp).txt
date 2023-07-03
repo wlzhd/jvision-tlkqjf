@@ -43,12 +43,12 @@ list.jsp
 
       <% 
       ArrayList<MemberVO> listOfMembers = mb.memberTotal();
-      for (int i=1; i<=listOfMembers.size(); i++) {
-       //MemberVO m = listOfMembers.get(i);
+      for (int i=0; i<listOfMembers.size(); i++) {
+       MemberVO m = listOfMembers.get(i);
       %>
 
       <tr>
-        <td><a href="/member/detail.jsp?idx=<%=i%>"></td>
+        <td><a href="/member/detail.jsp?idx=<%=m.getIdx()%>"><%=m.getIdx()%></a></td>
         <td>산대특</td>
         <td>2기</td>
         <td>김지성</td>
